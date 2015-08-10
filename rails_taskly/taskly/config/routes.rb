@@ -4,6 +4,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :users, except: [:new, :edit] do
         resources :tasks
+        post 'tasks/:id/complete', to: 'tasks#complete'
       end
   end
 end

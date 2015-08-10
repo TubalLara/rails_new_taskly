@@ -2,12 +2,13 @@ class Api::V1::TasksController < ApplicationController
 	before_action :user_exists
 
 	def index
-		tasks = @user.tasks
+		tasks = @user.tasks.order(completed_at: :desc)
 		render json: tasks
 	end
 
 	def create
 	   task = @user.tasks.build(task_params)
+	   task.save
 	   render json: task
 	end
 
@@ -22,8 +23,8 @@ class Api::V1::TasksController < ApplicationController
 
 	def complete
 		task = @user.tasks.find_by(id: params[:id])
-		unless  task
-			render json: { error: 'task not found'}, status 400
+		unless task
+			render json: { error: "task not found"}, status: 400
 			return
 		end
 		task.complete!
